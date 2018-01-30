@@ -65,6 +65,13 @@ func AllTasks() ([]Task, error) {
 	return tasks, nil
 }
 
+func DeleteTask(key int) error {
+	return db.Update(func(tx *bolt.Tx) error {
+		bucket := tx.Bucket(taskBucket)
+		return bucket.Delete(itobs(key))
+	})
+}
+
 // conversion helpers needed by BoltDB, since everything stored in it must
 // be a byte slice, so our strings are fine but integers need converting.
 func itobs(v int) []byte {
