@@ -14,12 +14,12 @@ import (
 // this package-level variable is not ideal, but will make it easy to use for all our queries
 var token string
 
-type coursesResponse []struct {
+type CoursesResponse []struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
-type assignmentsResponse []struct {
+type AssignmentsResponse []struct {
 	ID                      int       `json:"id"`
 	Description             string    `json:"description"`
 	DueAt                   time.Time `json:"due_at"`
@@ -43,7 +43,7 @@ func Init() error {
 	return nil
 }
 
-func QueryCourses() (data coursesResponse, err error) {
+func QueryCourses() (data CoursesResponse, err error) {
 	query := fmt.Sprintf("https://temp.acme.instructure.com/api/v1/courses?access_token=%s", token)
 	resp, err := http.Get(query)
 	if err != nil {
@@ -61,7 +61,7 @@ func QueryCourses() (data coursesResponse, err error) {
 }
 
 // QueryAssignmentsUngraded retrieves the list of ungraded assignments for the given course ID
-func QueryAssignmentsUngraded(courseID int) (data assignmentsResponse, err error) {
+func QueryAssignmentsUngraded(courseID int) (data AssignmentsResponse, err error) {
 	query := fmt.Sprintf("https://temp.acme.instructure.com/api/v1/courses/%d/assignments?access_token=%s", courseID, token)
 	query = fmt.Sprintf("%s&bucket=ungraded", query)
 
