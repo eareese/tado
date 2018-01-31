@@ -15,7 +15,10 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/eareese/todo/canvas"
 	"github.com/spf13/cobra"
@@ -52,8 +55,21 @@ configured in the TODO_TOKEN environment variable.`,
 			}
 		}
 
-		// TODO finally, prompt to add the assignments somehow as todos, instead of this summary
-		fmt.Printf("I found %d ungraded assignments in %d courses.\n", len(ungraded), len(courses))
+		// prompt to add the ungraded as tasks
+		fmt.Printf("Found %d ungraded assignments in %d courses.\n", len(ungraded), len(courses))
+		fmt.Println("Add them all as Grading tasks? [Y/n]")
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		switch input {
+		case "", "y", "Y", "yes", "Yes":
+			for _, u := range ungraded {
+				task := fmt.Sprintf("Grade %s", u)
+				Add(task)
+			}
+		default:
+			fmt.Println("No grading tasks were added.")
+		}
 	},
 }
 
