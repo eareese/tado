@@ -43,9 +43,7 @@ func Init() error {
 	return nil
 }
 
-func QueryCourses() (coursesResponse, error) {
-	var data coursesResponse
-
+func QueryCourses() (data coursesResponse, err error) {
 	query := fmt.Sprintf("https://temp.acme.instructure.com/api/v1/courses?access_token=%s", token)
 	resp, err := http.Get(query)
 	if err != nil {
