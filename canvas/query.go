@@ -59,3 +59,23 @@ func QueryCourses() (data coursesResponse, err error) {
 	json.Unmarshal(body, &data)
 	return data, nil
 }
+
+// QueryAssignmentsUngraded retrieves the list of ungraded assignments for the given course ID
+func QueryAssignmentsUngraded(courseID int) (data assignmentsResponse, err error) {
+	query := fmt.Sprintf("https://temp.acme.instructure.com/api/v1/courses/3/assignments?access_token=%s", token)
+	query = fmt.Sprintf("%s&bucket=ungraded", query)
+
+	resp, err := http.Get(query)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	json.Unmarshal(body, &data)
+	return data, nil
+}

@@ -31,17 +31,31 @@ into task items.
 Requires a valid access token for the Canvas instance to be
 configured in the TODO_TOKEN environment variable.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		got, err := canvas.QueryCourses()
+		// collect ungraded assignments:
+		var ungraded []string
+
+		// first query up all available courses
+		courses, err := canvas.QueryCourses()
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("Got this many courses from query: ", len(got))
+
+		// look up the names of ungraded assignments for each course found
+		for _, course := range courses {
+			assignments, err := canvas.QueryAssignmentsUngraded(course.ID)
+			if err != nil {
+				fmt.Printf("failed to query assignments for course with ID %d:%v\n", course.ID, err)
+				continue
+			}
+			for _, assn := range assignments {
+				ungraded = append(ungraded, assn.Name)
+			}
+		}
+
+		// TODO finally, prompt to add the assignments somehow as todos, instead of this summary
+		fmt.Printf("I found %d ungraded assignments in %d courses.\n", len(ungraded), len(courses))
 	},
 }
-
-// func queryAssignments(courseId int) ([]assignmentData, error) {
-// 	resp, err := http.Get("")
-// }
 
 func init() {
 	RootCmd.AddCommand(checkCmd)
