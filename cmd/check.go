@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/eareese/todo/canvas"
 	"github.com/spf13/cobra"
 )
 
@@ -30,20 +31,17 @@ into task items.
 Requires a valid access token for the Canvas instance to be
 configured in the TODO_TOKEN environment variable.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("check called")
+		got, err := canvas.QueryCourses()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Got this many courses from query: ", len(got))
 	},
 }
 
-type courseData struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-type assignmentData struct {
-	ID                int    `json:"id"`
-	Description       string `json:"description"`
-	NeedsGradingCount int    `json:"needs_grading_count"`
-}
+// func queryAssignments(courseId int) ([]assignmentData, error) {
+// 	resp, err := http.Get("")
+// }
 
 func init() {
 	RootCmd.AddCommand(checkCmd)
