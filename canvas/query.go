@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -16,6 +17,18 @@ var token string
 type coursesResponse []struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
+}
+
+type assignmentsResponse []struct {
+	ID                      int       `json:"id"`
+	Description             string    `json:"description"`
+	DueAt                   time.Time `json:"due_at"`
+	CreatedAt               time.Time `json:"created_at"`
+	UpdatedAt               time.Time `json:"updated_at"`
+	CourseID                int       `json:"course_id"`
+	Name                    string    `json:"name"`
+	HasSubmittedSubmissions bool      `json:"has_submitted_submissions"`
+	NeedsGradingCount       int       `json:"needs_grading_count"`
 }
 
 // Init sets the access token found in env variable
