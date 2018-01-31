@@ -62,7 +62,7 @@ func QueryCourses() (data coursesResponse, err error) {
 
 // QueryAssignmentsUngraded retrieves the list of ungraded assignments for the given course ID
 func QueryAssignmentsUngraded(courseID int) (data assignmentsResponse, err error) {
-	query := fmt.Sprintf("https://temp.acme.instructure.com/api/v1/courses/3/assignments?access_token=%s", token)
+	query := fmt.Sprintf("https://temp.acme.instructure.com/api/v1/courses/%d/assignments?access_token=%s", courseID, token)
 	query = fmt.Sprintf("%s&bucket=ungraded", query)
 
 	resp, err := http.Get(query)
