@@ -24,6 +24,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type assignment struct {
+	Name   string
+	Course string
+}
+
 // checkCmd represents the check command
 var checkCmd = &cobra.Command{
 	Use:   "check",
@@ -35,7 +40,7 @@ Requires a valid access token for the Canvas instance to be
 configured in the TODO_TOKEN environment variable.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// collect ungraded assignments:
-		var ungraded []string
+		var ungraded []assignment
 
 		// first query up all available courses
 		courses, err := canvas.QueryCourses()
@@ -51,7 +56,7 @@ configured in the TODO_TOKEN environment variable.`,
 				continue
 			}
 			for _, assn := range assignments {
-				ungraded = append(ungraded, assn.Name)
+				ungraded = append(ungraded, assignment{Name: assn.Name, Course: course.Name})
 			}
 		}
 
@@ -64,7 +69,7 @@ configured in the TODO_TOKEN environment variable.`,
 		switch input {
 		case "", "y", "Y", "yes", "Yes":
 			for _, u := range ungraded {
-				task := fmt.Sprintf("Grade %s", u)
+				task := fmt.Sprintf("Grade %s", u.Name)
 				Add(task)
 			}
 		default:
